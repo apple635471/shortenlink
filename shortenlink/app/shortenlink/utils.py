@@ -13,9 +13,9 @@ from .exception import (
 )
 
 
-def _is_url_repeat(url: str, model) -> bool:
+def _is_url_repeat(url: str, username: str, model: models.Model) -> bool:
     """Check if the URL is repeated"""
-    return model.objects.filter(url=url).exists()
+    return model.objects.filter(url=url, owner=username).exists()
 
 
 def _url_counts(model) -> int:
@@ -23,11 +23,16 @@ def _url_counts(model) -> int:
     return model.objects.count()
 
 
-def load_shorten_url(url: str, model: models.Model) -> str:
+def is_url_owner(url: str, username: str, model: models.Model) -> bool:
+    """Check if the URL is owned by the user"""
+    return model.objects.filter(url=url, owner=username).exists()
+
+
+def load_shorten_url(url: str, username: str, model: models.Model) -> str:
     """Load the shorten URL"""
     # try-catch handle if failed to retrieve
     try:
-        return model.objects.get(url=url).short_url
+        return model.objects.get(url=url, owner=username).short_url
     except Exception as e:
         print(e)
         raise ShortenURLRetrievalError
@@ -60,13 +65,16 @@ def track_shorten_url(
         raise TrackingCreationError
 
 
-def save_shorten_url(url: str, short_url: str, model: models.Model) -> str:
+def save_shorten_url(
+    url: str, short_url: str, username: str, model: models.Model
+) -> str:
     """Save the URL"""
     # try-catch handle if failed to create
     try:
         model.objects.create(
             url=url,
             short_url=short_url,
+            owner=username,
             created_at=datetime.datetime.now(datetime.timezone.utc),
         )
     except Exception as e:
@@ -76,23 +84,23 @@ def save_shorten_url(url: str, short_url: str, model: models.Model) -> str:
     return short_url
 
 
-def create_shorten_url(url: str, model: models.Model) -> str:
+def create_shorten_url(url: str, username: str, model: models.Model) -> str:
     """Create a shorten URL"""
     # check if the URL is repeated
-    if _is_url_repeat(url, model):
-        return load_shorten_url(url, model)
+    if _is_url_repeat(url, username, model):
+        return load_shorten_url(url, username, model)
 
     # save the URL
     urlnum = _url_counts(model)
     short_url = shorten_url(urlnum)
 
-    return save_shorten_url(url, short_url, model)
+    return save_shorten_url(url, short_url, username, model)
 
 
-def show_urls(model: models.Model) -> dict[int, dict[str, str]]:
+def show_urls(username: str, model: models.Model) -> dict[int, dict[str, str]]:
     """Show all the URLs"""
     urlmappings = {}
-    objects = model.objects.all()
+    objects = model.objects.filter(owner=username)
     for urlmapping in objects:
         urlmappings[urlmapping.id] = {
             "url": urlmapping.url,

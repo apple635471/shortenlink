@@ -1,7 +1,7 @@
 #!/bin/bash
 cd shortenlink
 set -x 
-python manage.py makemigrations
+python manage.py makemigrations app
 python manage.py migrate
 # python manage.py createsuperuser
 python manage.py collectstatic --noinput

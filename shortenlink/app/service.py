@@ -20,9 +20,9 @@ class UserInfo(object):
         self.accessed_at = datetime.datetime.now(datetime.timezone.utc)
 
 
-def shorten_url(url: str) -> str:
+def shorten_url(url: str, username: str) -> str:
     """Shorten a URL"""
-    return create_shorten_url(url, URLMapping)
+    return create_shorten_url(url, username, URLMapping)
 
 
 def retrieve_url(short_url: str) -> str:
@@ -37,9 +37,9 @@ def record_activity(short_url: str, user_info: UserInfo):
     return track_shorten_url(id, user_info, URLTracking)
 
 
-def display_urls() -> tuple[int, dict]:
+def display_urls(username: str) -> tuple[int, dict]:
     """Display all the URLs"""
-    urlmappings = show_urls(URLMapping)
+    urlmappings = show_urls(username, URLMapping)
     mapping_num = len(urlmappings)
     mappings = list(urlmappings.values())
     return mapping_num, mappings

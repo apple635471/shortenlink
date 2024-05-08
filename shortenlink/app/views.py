@@ -40,7 +40,7 @@ def shorten_post(request: HttpRequest) -> HttpResponse:
         return render(request, "shorten.html", {"username": request.user.username})
     # shorten the URL
     try:
-        short_url = service.shorten_url(url)
+        short_url = service.shorten_url(url, request.user.username)
     except ShortenURLCreationError:
         # return 400 if failed to create
         return HttpResponse(status=400, reason="Failed to create shorten URL")
@@ -66,7 +66,6 @@ def redirect(request: HttpRequest, short_url: str) -> HttpResponse:
         return HttpResponse(status=400, reason="Short URL is required")
     try:
         ip_address = request.META.get("REMOTE_ADDR")
-        print(ip_address)
         service.record_activity(short_url, service.UserInfo(ip_address))
         url = service.retrieve_url(short_url)
     except Exception as e:
@@ -85,15 +84,27 @@ def urls(request: HttpRequest) -> HttpResponse:
     except ValueError:
         page = 1
 
-    mapping_num, mappings = service.display_urls()
+    mapping_num, mappings = service.display_urls(request.user.username)
 
     short_url = request.GET.get("short_url")
     short_urls = [mp["short_url"] for mp in mappings]
     if not short_url or short_url not in short_urls:
-        short_url = mappings[0]["short_url"]
+        if mapping_num > 0:
+            short_url = mappings[0]["short_url"]
+        else:
+            short_url = "-"
 
-    url, page, tracking_num, trackings = service.display_records(short_url, page=page)
-    absolute_short_url = request.build_absolute_uri("redirect/" + short_url)
+    if short_url != "-":
+        url, page, tracking_num, trackings = service.display_records(
+            short_url, page=page
+        )
+        absolute_short_url = request.build_absolute_uri("redirect/" + short_url)
+    else:
+        url = "-"
+        page = 1
+        tracking_num = 0
+        trackings = []
+        absolute_short_url = "-"
     return render(
         request,
         "urls.html",
