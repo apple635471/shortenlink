@@ -45,10 +45,9 @@ def display_urls() -> tuple[int, dict]:
     return mapping_num, mappings
 
 
-def display_records(short_url: str):
+def display_records(short_url: str, page=1):
     """Display all the records"""
     id, url = load_url(short_url, URLMapping)
-    trackings = show_trackings(id, URLTracking)
-    tracking_num = len(trackings)
+    page, tracking_num, trackings = show_trackings(id, URLTracking, page=page)
     trackings = list(trackings.values())
-    return url, tracking_num, trackings
+    return url, page, tracking_num, trackings

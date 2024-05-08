@@ -17,7 +17,7 @@ services:
       - .:/workspace
     depends_on:
       - db
-    # command: /bin/bash ./run.sh
+    command: ./run.sh
   db:
     image: postgres:12
     volumes:

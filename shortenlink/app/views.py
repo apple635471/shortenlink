@@ -79,6 +79,12 @@ def redirect(request: HttpRequest, short_url: str) -> HttpResponse:
 @login_required(login_url="/login")
 def urls(request: HttpRequest) -> HttpResponse:
     """URLs page"""
+    page = request.GET.get("page", 1)
+    try:
+        page = max(1, int(page))
+    except ValueError:
+        page = 1
+
     mapping_num, mappings = service.display_urls()
 
     short_url = request.GET.get("short_url")
@@ -86,7 +92,7 @@ def urls(request: HttpRequest) -> HttpResponse:
     if not short_url or short_url not in short_urls:
         short_url = mappings[0]["short_url"]
 
-    url, tracking_num, trackings = service.display_records(short_url)
+    url, page, tracking_num, trackings = service.display_records(short_url, page=page)
     absolute_short_url = request.build_absolute_uri("redirect/" + short_url)
     return render(
         request,
@@ -99,6 +105,7 @@ def urls(request: HttpRequest) -> HttpResponse:
             "tracking_num": tracking_num,
             "trackings": trackings,
             "username": request.user.username,
+            "page": page,
         },
     )
 

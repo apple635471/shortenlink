@@ -1,4 +1,6 @@
+#!/bin/bash
 cd shortenlink
+set -x 
 python manage.py makemigrations
 python manage.py migrate
 # python manage.py createsuperuser

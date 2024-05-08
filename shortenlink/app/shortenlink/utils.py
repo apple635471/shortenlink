@@ -92,7 +92,8 @@ def create_shorten_url(url: str, model: models.Model) -> str:
 def show_urls(model: models.Model) -> dict[int, dict[str, str]]:
     """Show all the URLs"""
     urlmappings = {}
-    for urlmapping in model.objects.all():
+    objects = model.objects.all()
+    for urlmapping in objects:
         urlmappings[urlmapping.id] = {
             "url": urlmapping.url,
             "short_url": urlmapping.short_url,
@@ -100,12 +101,25 @@ def show_urls(model: models.Model) -> dict[int, dict[str, str]]:
     return urlmappings
 
 
-def show_trackings(url_id: int, track_model: models.Model) -> dict[int, dict[str, any]]:
+def show_trackings(
+    url_id: int, track_model: models.Model, page: int = 1
+) -> tuple[int, int, dict[int, dict[str, any]]]:
     """Show all the trackings"""
     trackings = {}
-    for tracking in track_model.objects.filter(url_mapping_id=url_id):
+    objects = track_model.objects.filter(url_mapping_id=url_id).order_by("accessed_at")
+    tracking_num = len(objects)
+    start = (page - 1) * 10
+    end = start + 10
+    if start < tracking_num:
+        objects = objects[start:end]
+    else:
+        page = (tracking_num // 10) + 1
+        start = (page - 1) * 10
+        end = start + 10
+        objects = objects[start:end]
+    for tracking in objects:
         trackings[tracking.id] = {
             "ip_address": tracking.ip_address,
             "accessed_at": tracking.accessed_at,
         }
-    return trackings
+    return page, tracking_num, trackings

@@ -44,5 +44,32 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="pagination">
+            <button id="prev-page">Prev Page</button>
+            <input type="number" id="current-page" value="{{page}}" min="1" readonly>
+            <button id="next-page">Next Page</button>
+        </div>
+
     </div>
+
+    <script>
+        document.getElementById('prev-page').addEventListener('click', function() {
+            const currentPage = parseInt(document.getElementById('current-page').value);
+            if (currentPage > 1) {
+                document.getElementById('current-page').value = currentPage - 1;
+                const url = new URL(window.location.href);
+                url.searchParams.set('page', currentPage - 1);
+                window.location.href = url.toString();
+            }
+        });
+
+        document.getElementById('next-page').addEventListener('click', function() {
+            const currentPage = parseInt(document.getElementById('current-page').value);
+            document.getElementById('current-page').value = currentPage + 1;
+            const url = new URL(window.location.href);
+            url.searchParams.set('page', currentPage + 1);
+            window.location.href = url.toString();
+        })
+    </script>
 {% endblock %}
