@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <form action="{% url 'urls' %}" method="get">
+            <div class="form-group">
+                <select class="form-control" name="short_url" onchange="this.form.submit()">
+                    {% for mapping in mappings %}
+                        <option value="{{ mapping.short_url }}" {% if mapping.url == url %}selected{% endif %}>
+                            {{ mapping.url }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                <p>URL: <a href="{{url}}">{{url}}</a></p>
+            </div>
+            <div class="col-auto">
+                <p>Short URL: <a href="{{short_url}}">{{short_url}}</a></p>
+            </div>
+            <div class="col-auto">
+                <p>Clicks: {{ tracking_num }}</p>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">IP Address</th>
+                        <th scope="col">Accessed At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tracking in trackings %}
+                        <tr>
+                            <td>{{ tracking.ip_address }}</td>
+                            <td>{{ tracking.accessed_at }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
