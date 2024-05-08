@@ -3,3 +3,4 @@ djangorestframework
 gunicorn
 psycopg2
 whitenoise
+django-allauth==0.61
