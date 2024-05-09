@@ -32,7 +32,7 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "appleshortenlink.ddns.net"]
 
 
 # Application definition
@@ -183,3 +183,5 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     }
 }
+
+CSRF_TRUSTED_ORIGINS = ["https://appleshortenlink.ddns.net"]
