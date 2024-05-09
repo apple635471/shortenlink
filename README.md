@@ -8,10 +8,14 @@
     * DJANGO_SECRET_KEY_BASE64
     * GOOGLE_OAUTH_CLIENT_ID
     * GOOGLE_OAUTH_SECRET
+    * FACEBOOK_OAUTH_CLIENT_ID
+    * FACEBOOK_OAUTH_SECRET
 ```
 DJANGO_SECRET_KEY_BASE64=XXXXXXXXXXXXXXXXXXXXXXX
 GOOGLE_OAUTH_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXX
 GOOGLE_OAUTH_SECRET=XXXXXXXXXXXXXXXXXXXXXXX
+FACEBOOK_OAUTH_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXX
+FACEBOOK_OAUTH_SECRET=XXXXXXXXXXXXXXXXXXXXXXX
 ```
 2. (optional) https related modification
     1. register hostname for your service's public ip, e.g. by noip
@@ -71,19 +75,29 @@ DEBUG = False
     * in production - https://{Your-Host-Name}/accounts/google/login/callback/
 ```
 
-4. docker compose run
+4. create OAuth credentials (Facebook)
+```
+1. go to `Meta for Developers`
+2. create `Facebook Login` application platform
+3. click `dashboard` for your platform & define your login app
+4. set OAuth redirect URI
+    * local development - http://127.0.0.1:8000/accounts/google/login/callback/
+    * in production - https://{Your-Host-Name}/accounts/google/login/callback/
+```
+
+5. docker compose run
 ```
 docker compose up 
 ```
 
-5. create admin to monitor db
+6. create admin to monitor db
 ```
 docker exec -it shortenlink-web-1 /bin/bash
 cd shortenlink/
 python manage.py createsuperuser
 ```
 
-6. open browser (user)
+7. open browser (user)
 ```
 # local development
 http://127.0.0.1:8000/
@@ -92,7 +106,7 @@ http://127.0.0.1:8000/
 https://{Your-Host-Name}/
 ```
 
-5. open browser (admin)
+8. open browser (admin)
 ```
 # local development
 http://127.0.0.1:8000/admin/

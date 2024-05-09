@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
     "widget_tweaks",
 ]
 
@@ -182,9 +183,25 @@ SOCIALACCOUNT_PROVIDERS = {
             "secret": os.environ.get("GOOGLE_OAUTH_SECRET"),
             "key": "",
         },
-    }
+    },
+    "facebook": {
+        "SCOPE": [
+            "email",
+            "public_profile",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "APP": {
+            "client_id": os.environ.get("FACEBOOK_OAUTH_CLIENT_ID"),
+            "secret": os.environ.get("FACEBOOK_OAUTH_SECRET"),
+            "key": "",
+        },
+    },
 }
 
 CSRF_TRUSTED_ORIGINS = ["https://appleshortenlink.ddns.net"]
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+ACCOUNT_EMAIL_VERIFICATION = "none"

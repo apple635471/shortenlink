@@ -17,8 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from .facebook_views import oauth2_login as facebook_login
+from .facebook_views import oauth2_callback as facebook_callback
+
 urlpatterns = [
     path("", include("app.urls")),
     path("admin/", admin.site.urls),
+    path("accounts/facebook/login/", facebook_login, name="facebook_login"),
+    path(
+        "accounts/facebook/login/callback/", facebook_callback, name="facebook_callback"
+    ),
     path("accounts/", include("allauth.urls")),
 ]
