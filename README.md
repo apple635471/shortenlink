@@ -2,6 +2,17 @@
 
 * [https://appleshortenlink.ddns.net/](https://appleshortenlink.ddns.net/)
 
+## How to use
+
+* Login Page (Google Login / Facebook Login)
+![Login Page](imgs/shortenlink_login.jpg)
+
+* Home Page - insert the URL you want to shorten, then click `Shorten`
+![Home Page](imgs/shortenlink_home.jpg)
+
+* URLs Page - select which short URL you want to check, and the following table records it's clicking history
+![URLs Page](imgs/shortenlink_urls.jpg)
+
 ## Run by Docker Compose
 
 1. create .env for your sensitive info 
