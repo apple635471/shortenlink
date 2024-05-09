@@ -114,7 +114,7 @@ def show_trackings(
 ) -> tuple[int, int, dict[int, dict[str, any]]]:
     """Show all the trackings"""
     trackings = {}
-    objects = track_model.objects.filter(url_mapping_id=url_id).order_by("accessed_at")
+    objects = track_model.objects.filter(url_mapping_id=url_id).order_by("-accessed_at")
     tracking_num = len(objects)
     start = (page - 1) * 10
     end = start + 10

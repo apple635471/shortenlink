@@ -65,13 +65,11 @@ def redirect(request: HttpRequest, short_url: str) -> HttpResponse:
     if not short_url:
         return HttpResponse(status=400, reason="Short URL is required")
     try:
-        ip_address = request.META.get("REMOTE_ADDR")
+        ip_address = request.META.get("HTTP_X_REAL_IP", request.META.get("REMOTE_ADDR"))
         service.record_activity(short_url, service.UserInfo(ip_address))
         url = service.retrieve_url(short_url)
-    except Exception as e:
-        print(e)
-        # return HttpResponse(status=404, reason="Short URL not found")
-        raise
+    except:
+        return HttpResponse(status=404, reason="Short URL not found")
     return HttpResponse(status=302, reason="Redirecting", headers={"Location": url})
 
 
