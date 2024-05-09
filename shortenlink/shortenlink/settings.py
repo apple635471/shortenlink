@@ -65,6 +65,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "shortenlink.middleware.LocalhostOnlyMiddleware",
 ]
 
 ROOT_URLCONF = "shortenlink.urls"
